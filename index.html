@@ -1,0 +1,100 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#080b12">
+  <meta name="description" content="ORVEX CITY - Explore a modern African-inspired 3D open world.">
+  <title>ORVEX CITY | ORVEX TECHNOLOGIES</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"
+      }
+    }
+  </script>
+</head>
+
+<body>
+
+  <div id="loadingScreen">
+    <div class="loading-logo">ORVEX</div>
+    <div class="loading-subtitle">CITY</div>
+    <div class="loading-track">
+      <div id="loadingProgress"></div>
+    </div>
+    <p id="loadingText">Preparing your city...</p>
+  </div>
+
+  <div id="game">
+
+    <header class="top-bar">
+      <div class="brand">
+        <span class="brand-icon">O</span>
+        <div>
+          <strong>ORVEX CITY</strong>
+          <small>OPEN WORLD</small>
+        </div>
+      </div>
+
+      <div class="player-info">
+        <span>PLAYER</span>
+        <strong id="playerName">PLAYER 01</strong>
+      </div>
+    </header>
+
+    <div class="game-hud">
+      <div class="hud-card">
+        <small>LOCATION</small>
+        <strong id="locationName">ORVEX DISTRICT</strong>
+      </div>
+
+      <div class="hud-card money-card">
+        <small>BALANCE</small>
+        <strong id="playerMoney">₦ 5,000</strong>
+      </div>
+    </div>
+
+    <div id="missionBox">
+      <span class="mission-label">MISSION</span>
+      <strong>Explore the city</strong>
+      <p>Discover your new world.</p>
+    </div>
+
+    <div id="crosshair"></div>
+
+    <div class="mobile-controls">
+
+      <div class="movement-controls">
+        <button id="forward" class="control-btn up">▲</button>
+
+        <div class="movement-row">
+          <button id="left" class="control-btn">◀</button>
+          <button id="backward" class="control-btn">▼</button>
+          <button id="right" class="control-btn">▶</button>
+        </div>
+      </div>
+
+      <div class="action-controls">
+        <button id="jump" class="action-btn">JUMP</button>
+        <button id="run" class="action-btn">RUN</button>
+      </div>
+
+    </div>
+
+    <div class="bottom-message">
+      ORVEX TECHNOLOGIES
+    </div>
+
+  </div>
+
+  <div id="errorMessage" hidden></div>
+
+  <script type="module" src="game.js"></script>
+
+</body>
+</html>
