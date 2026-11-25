@@ -338,61 +338,248 @@ for (let i = -180; i <= 180; i += 60) {
   createStreetLight(i, -13);
 }
 
-// PLAYER CHARACTER
+
+ // =====================================
+ // ORVEX CITY - HUMAN PLAYER CHARACTER
+ // =====================================
+
 const player = new THREE.Group();
 
-const body = box(
-  player, 0, 1.8, 0,
-  0.9, 1.1, 0.48,
-  materials.shirt
+const skinMaterial = new THREE.MeshStandardMaterial({
+  color: 0x713f29,
+  roughness: 0.72
+});
+
+const shirtMaterial = new THREE.MeshStandardMaterial({
+  color: 0x171b24,
+  roughness: 0.85
+});
+
+const pantsMaterial = new THREE.MeshStandardMaterial({
+  color: 0x252b35,
+  roughness: 0.9
+});
+
+const shoeMaterial = new THREE.MeshStandardMaterial({
+  color: 0x090909,
+  roughness: 0.8
+});
+
+const hairMaterial = new THREE.MeshStandardMaterial({
+  color: 0x100d0b,
+  roughness: 0.95
+});
+
+const detailMaterial = new THREE.MeshStandardMaterial({
+  color: 0xb5b5b5,
+  metalness: 0.5
+});
+
+function humanMesh(geometry, material, x, y, z) {
+  const mesh = new THREE.Mesh(geometry, material);
+  mesh.position.set(x, y, z);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+  player.add(mesh);
+  return mesh;
+}
+
+// BODY
+const torso = humanMesh(
+  new THREE.CapsuleGeometry(0.43, 0.65, 6, 12),
+  shirtMaterial,
+  0, 1.85, 0
 );
 
-const head = new THREE.Mesh(
-  new THREE.SphereGeometry(0.32, 16, 12),
-  materials.skin
+torso.scale.set(1, 1, 0.72);
+
+// NECK
+humanMesh(
+  new THREE.CylinderGeometry(0.13, 0.16, 0.24, 12),
+  skinMaterial,
+  0, 2.43, 0
 );
 
-head.position.y = 2.75;
-player.add(head);
+// HEAD
+const headGroup = new THREE.Group();
+player.add(headGroup);
 
+const face = new THREE.Mesh(
+  new THREE.SphereGeometry(0.3, 24, 20),
+  skinMaterial
+);
+
+face.scale.set(0.88, 1.12, 0.9);
+face.position.y = 2.77;
+face.castShadow = true;
+headGroup.add(face);
+
+// HAIR
 const hair = new THREE.Mesh(
-  new THREE.SphereGeometry(0.33, 12, 8),
-  new THREE.MeshStandardMaterial({ color: 0x171311 })
+  new THREE.SphereGeometry(0.305, 20, 12, 0, Math.PI * 2, 0, Math.PI * 0.48),
+  hairMaterial
 );
 
-hair.scale.set(1, 0.55, 1);
-hair.position.y = 2.96;
-player.add(hair);
+hair.position.set(0, 2.88, 0);
+headGroup.add(hair);
 
-const leftLeg = box(
-  player, -0.23, 0.75, 0,
-  0.32, 0.85, 0.35,
-  materials.trousers
+// EARS
+for (const side of [-1, 1]) {
+  const ear = new THREE.Mesh(
+    new THREE.SphereGeometry(0.075, 12, 10),
+    skinMaterial
+  );
+
+  ear.position.set(side * 0.27, 2.75, 0);
+  ear.scale.set(0.55, 1, 0.7);
+  headGroup.add(ear);
+}
+
+// EYES
+const eyeMaterial = new THREE.MeshStandardMaterial({
+  color: 0x17100c
+});
+
+for (const side of [-1, 1]) {
+  const eye = new THREE.Mesh(
+    new THREE.SphereGeometry(0.035, 12, 10),
+    eyeMaterial
+  );
+
+  eye.position.set(side * 0.105, 2.8, 0.255);
+  eye.scale.set(1.2, 0.7, 0.7);
+  headGroup.add(eye);
+}
+
+// NOSE
+humanMesh(
+  new THREE.SphereGeometry(0.065, 12, 10),
+  skinMaterial,
+  0, 2.73, 0.29
 );
 
-const rightLeg = box(
-  player, 0.23, 0.75, 0,
-  0.32, 0.85, 0.35,
-  materials.trousers
+// MOUTH
+humanMesh(
+  new THREE.BoxGeometry(0.09, 0.018, 0.015),
+  hairMaterial,
+  0, 2.64, 0.274
 );
 
-const leftArm = box(
-  player, -0.62, 1.85, 0,
-  0.28, 0.95, 0.3,
-  materials.skin
+// HAIRLINE / SHORT HAIRSTYLE
+const topHair = new THREE.Mesh(
+  new THREE.SphereGeometry(0.19, 16, 8),
+  hairMaterial
 );
 
-const rightArm = box(
-  player, 0.62, 1.85, 0,
-  0.28, 0.95, 0.3,
-  materials.skin
-);
+topHair.scale.set(1.25, 0.35, 1);
+topHair.position.set(0, 3.02, 0);
+headGroup.add(topHair);
 
-box(player, -0.23, 0.3, 0.08, 0.34, 0.2, 0.55, materials.shoes);
-box(player, 0.23, 0.3, 0.08, 0.34, 0.2, 0.55, materials.shoes);
+// SHOULDERS
+for (const side of [-1, 1]) {
+  humanMesh(
+    new THREE.SphereGeometry(0.22, 16, 12),
+    shirtMaterial,
+    side * 0.42, 2.13, 0
+  );
+}
 
+// ARMS
+const leftArm = new THREE.Group();
+const rightArm = new THREE.Group();
+
+player.add(leftArm, rightArm);
+
+function createArm(group, side) {
+  group.position.set(side * 0.48, 2.1, 0);
+
+  const upper = new THREE.Mesh(
+    new THREE.CapsuleGeometry(0.105, 0.42, 5, 10),
+    shirtMaterial
+  );
+
+  upper.position.y = -0.3;
+  upper.rotation.z = side * -0.08;
+  upper.castShadow = true;
+  group.add(upper);
+
+  const forearm = new THREE.Mesh(
+    new THREE.CapsuleGeometry(0.085, 0.35, 5, 10),
+    skinMaterial
+  );
+
+  forearm.position.y = -0.72;
+  forearm.castShadow = true;
+  group.add(forearm);
+
+  const hand = new THREE.Mesh(
+    new THREE.SphereGeometry(0.105, 12, 10),
+    skinMaterial
+  );
+
+  hand.position.y = -0.96;
+  group.add(hand);
+}
+
+createArm(leftArm, -1);
+createArm(rightArm, 1);
+
+// LEGS
+const leftLeg = new THREE.Group();
+const rightLeg = new THREE.Group();
+
+player.add(leftLeg, rightLeg);
+
+function createLeg(group, side) {
+  group.position.set(side * 0.2, 1.05, 0);
+
+  const thigh = new THREE.Mesh(
+    new THREE.CapsuleGeometry(0.14, 0.45, 5, 12),
+    pantsMaterial
+  );
+
+  thigh.position.y = -0.3;
+  thigh.castShadow = true;
+  group.add(thigh);
+
+  const lower = new THREE.Mesh(
+    new THREE.CapsuleGeometry(0.105, 0.4, 5, 12),
+    pantsMaterial
+  );
+
+  lower.position.y = -0.76;
+  lower.castShadow = true;
+  group.add(lower);
+
+  const shoe = new THREE.Mesh(
+    new THREE.BoxGeometry(0.27, 0.15, 0.43),
+    shoeMaterial
+  );
+
+  shoe.position.set(0, -1.02, 0.09);
+  shoe.castShadow = true;
+  group.add(shoe);
+
+  const sole = new THREE.Mesh(
+    new THREE.BoxGeometry(0.28, 0.035, 0.44),
+    detailMaterial
+  );
+
+  sole.position.set(0, -1.105, 0.09);
+  group.add(sole);
+}
+
+createLeg(leftLeg, -1);
+createLeg(rightLeg, 1);
+
+// CHARACTER POSITION
 player.position.set(0, 0, 0);
 scene.add(player);
+
+// ANIMATION REFERENCES
+const leftArmMesh = leftArm;
+const rightArmMesh = rightArm;
+  
 
 // PLAYER MOVEMENT
 const keys = {
