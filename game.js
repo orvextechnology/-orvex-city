@@ -1,6 +1,6 @@
 
 import * as THREE from "three";
-
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 // ========================================
 // ORVEX CITY - OPEN WORLD GAME ENGINE
 // ORVEX TECHNOLOGIES
@@ -274,16 +274,113 @@ try {
     return { group: human, arms, legs };
   }
 
-  // PLAYER
-  const playerModel = createHuman({
-    skin: 0x713f29,
-    shirt: 0x171b24,
-    pants: 0x252b35
-  });
+  
+  // ========================================
+  // REAL GTA-STYLE PLAYER CHARACTER
+  // ========================================
 
-  const player = playerModel.group;
+  const player = new THREE.Group();
   player.position.set(0, 0, 0);
   scene.add(player);
+
+  const characterLoader = new GLTFLoader();
+
+  let characterMixer = null;
+  let characterActions = {};
+  let currentCharacterAction = null;
+  let characterReady = false;
+
+  characterLoader.load(
+    "./The_Gangster.glb",
+
+    function (gltf) {
+      const character = gltf.scene;
+
+      character.traverse(object => {
+        if (object.isMesh) {
+          object.castShadow = true;
+          object.receiveShadow = true;
+        }
+      });
+
+      // Fit character to game world
+      const bounds = new THREE.Box3().setFromObject(character);
+      const size = bounds.getSize(new THREE.Vector3());
+
+      const targetHeight = 1.8;
+      const scale = targetHeight / size.y;
+
+      character.scale.setScalar(scale);
+
+      // Position feet on ground
+      const scaledBounds = new THREE.Box3().setFromObject(character);
+      const center = scaledBounds.getCenter(new THREE.Vector3());
+
+      character.position.x -= center.x;
+      character.position.y -= scaledBounds.min.y;
+      character.position.z -= center.z;
+
+      player.add(character);
+
+      // Load real animations
+      characterMixer = new THREE.AnimationMixer(character);
+
+      gltf.animations.forEach(clip => {
+        const name = clip.name.toLowerCase();
+
+        if (name.includes("idle")) {
+          characterActions.idle =
+            characterMixer.clipAction(clip);
+        }
+
+        if (name.includes("walk")) {
+          characterActions.walk =
+            characterMixer.clipAction(clip);
+        }
+
+        if (name.includes("run")) {
+          characterActions.run =
+            characterMixer.clipAction(clip);
+        }
+      });
+
+      // Start idle animation
+      if (characterActions.idle) {
+        currentCharacterAction = characterActions.idle;
+        currentCharacterAction.play();
+      }
+
+      characterReady = true;
+
+      console.log("ORVEX: Real character loaded!");
+      console.log("Animations:", Object.keys(characterActions));
+    },
+
+    undefined,
+
+    function (error) {
+      console.error("Character loading failed:", error);
+    }
+  );
+
+  // Switch character animation
+  function playCharacterAnimation(name) {
+    if (!characterReady) return;
+
+    const nextAction = characterActions[name];
+
+    if (!nextAction || nextAction === currentCharacterAction) return;
+
+    nextAction.reset();
+    nextAction.play();
+
+    if (currentCharacterAction) {
+      currentCharacterAction.crossFadeTo(nextAction, 0.2, false);
+    }
+
+    currentCharacterAction = nextAction;
+}
+
 
   // PEDESTRIANS
   const pedestrians = [];
@@ -424,14 +521,20 @@ try {
       walkTime += delta * (keys.run ? 12 : 8);
     }
 
-    // PLAYER ANIMATION
-    const swing = moving ? Math.sin(walkTime) : 0;
+    
+    // REAL CHARACTER ANIMATIONS
+    if (characterMixer) {
+      characterMixer.update(delta);
 
-    playerModel.legs[0].rotation.x = swing * 0.55;
-    playerModel.legs[1].rotation.x = -swing * 0.55;
-    playerModel.arms[0].rotation.x = -swing * 0.4;
-    playerModel.arms[1].rotation.x = swing * 0.4;
-
+      if (!moving) {
+        playCharacterAnimation("idle");
+      } else if (keys.run) {
+        playCharacterAnimation("run");
+      } else {
+        playCharacterAnimation("walk");
+      }
+    }
+    
     // JUMP
     verticalVelocity -= 18 * delta;
     player.position.y += verticalVelocity * delta;
