@@ -1,21 +1,5 @@
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html, body {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  background: #080b12;
-  color: white;
-  font-family: Arial, sans-serif;
-  touch-action: none;
-  user-select: none;
-}
-
+/* ORVEX MOTORSPORT */
 #game {
   position: fixed;
   inset: 0;
@@ -23,7 +7,7 @@ html, body {
   background: #080b12;
 }
 
-canvas {
+#game canvas {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -31,137 +15,56 @@ canvas {
   display: block;
 }
 
-.top-bar {
+#raceHUD {
   position: absolute;
-  z-index: 5;
-  top: 0;
-  left: 0;
-  right: 0;
-  padding: 16px;
+  top: 15px;
+  left: 15px;
+  right: 15px;
+  z-index: 10;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  background: linear-gradient(
-    to bottom,
-    rgba(0,0,0,.75),
-    transparent
-  );
+  align-items: flex-start;
   pointer-events: none;
+  color: white;
+  font-family: Arial, sans-serif;
 }
 
-.brand {
+.race-brand {
+  font-size: 19px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: #ff3030;
+  text-shadow: 0 2px 8px #000;
+}
+
+.race-stats {
   display: flex;
-  align-items: center;
   gap: 10px;
 }
 
-.brand-icon {
-  width: 40px;
-  height: 40px;
-  display: grid;
-  place-items: center;
-  border: 2px solid #d6a64d;
-  color: #e9bd65;
-  font-size: 25px;
-  font-weight: 900;
+.stat {
+  background: rgba(0,0,0,.7);
+  padding: 10px;
   border-radius: 10px;
+  text-align: center;
 }
 
-.brand strong {
+.stat small {
   display: block;
-  font-size: 16px;
-  letter-spacing: 2px;
-}
-
-.brand small {
-  display: block;
-  color: #d6a64d;
-  font-size: 9px;
-  letter-spacing: 3px;
-  margin-top: 4px;
-}
-
-.player-info {
-  text-align: right;
-}
-
-.player-info span,
-.hud-card small {
-  display: block;
-  color: #aeb7c6;
-  font-size: 9px;
-  letter-spacing: 1.5px;
-  margin-bottom: 5px;
-}
-
-.player-info strong {
-  font-size: 12px;
-}
-
-.game-hud {
-  position: absolute;
-  top: 78px;
-  left: 14px;
-  right: 14px;
-  z-index: 5;
-  display: flex;
-  justify-content: space-between;
-  pointer-events: none;
-}
-
-.hud-card {
-  background: rgba(7,12,21,.75);
-  border: 1px solid rgba(255,255,255,.12);
-  border-radius: 8px;
-  padding: 10px 13px;
-  backdrop-filter: blur(8px);
-}
-
-.hud-card strong {
-  font-size: 12px;
-}
-
-.money-card strong {
-  color: #e9bd65;
-}
-
-#missionBox {
-  position: absolute;
-  top: 140px;
-  left: 14px;
-  z-index: 5;
-  padding: 12px 15px;
-  width: 190px;
-  background: rgba(7,12,21,.78);
-  border-left: 3px solid #d6a64d;
-  border-radius: 5px;
-  pointer-events: none;
-}
-
-.mission-label {
-  color: #e9bd65;
-  display: block;
-  font-size: 9px;
-  letter-spacing: 2px;
-  margin-bottom: 7px;
-}
-
-#missionBox strong {
-  font-size: 13px;
-}
-
-#missionBox p {
   font-size: 10px;
-  color: #aeb7c6;
-  margin-top: 5px;
+  color: #aaa;
+}
+
+.stat strong {
+  font-size: 17px;
 }
 
 .mobile-controls {
   position: absolute;
-  bottom: 32px;
+  z-index: 20;
+  bottom: 25px;
   left: 0;
   right: 0;
-  z-index: 10;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
@@ -169,141 +72,64 @@ canvas {
   pointer-events: none;
 }
 
-.movement-controls,
-.action-controls {
+.steering,
+.racing-buttons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
   pointer-events: auto;
 }
 
-.control-btn {
-  width: 49px;
-  height: 49px;
-  margin: 3px;
-  border-radius: 13px;
-  border: 1px solid rgba(255,255,255,.25);
-  background: rgba(9,17,29,.75);
-  color: white;
-  font-size: 19px;
-  backdrop-filter: blur(8px);
-  touch-action: none;
-}
-
-.control-btn.up {
-  display: block;
-  margin: 3px auto;
-}
-
-.control-btn:active,
-.action-btn:active {
-  background: #b98835;
-}
-
-.action-controls {
-  display: flex;
-  gap: 9px;
-  align-items: flex-end;
-}
-
-.action-btn {
-  width: 62px;
-  height: 62px;
+.mobile-controls button {
+  width: 65px;
+  height: 65px;
+  border: 2px solid rgba(255,255,255,.5);
   border-radius: 50%;
-  border: 2px solid rgba(233,189,101,.8);
-  background: rgba(9,17,29,.8);
+  background: rgba(15,20,30,.8);
   color: white;
-  font-size: 10px;
   font-weight: bold;
+  font-size: 17px;
   touch-action: none;
 }
 
-#crosshair {
-  display: none;
+.mobile-controls #accelerate {
+  background: #d90020;
+  width: 78px;
+  height: 78px;
 }
 
-.bottom-message {
+.mobile-controls #nitro {
+  background: #1459bd;
+}
+
+.mobile-controls #brake {
+  background: #333;
+}
+
+.race-footer {
   position: absolute;
-  z-index: 5;
-  bottom: 9px;
-  left: 0;
-  right: 0;
-  text-align: center;
-  color: rgba(255,255,255,.5);
-  font-size: 8px;
+  z-index: 10;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-size: 9px;
   letter-spacing: 3px;
   pointer-events: none;
 }
 
-#loadingScreen {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  background: radial-gradient(
-    circle at center,
-    #182638,
-    #080b12 75%
-  );
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.loading-logo {
-  font-size: 42px;
-  font-weight: 900;
-  letter-spacing: 9px;
-  color: #e9bd65;
-}
-
-.loading-subtitle {
-  letter-spacing: 12px;
-  font-size: 14px;
-  margin-left: 12px;
-}
-
-.loading-track {
-  width: 190px;
-  height: 4px;
-  background: #263344;
-  border-radius: 10px;
-  margin-top: 35px;
-  overflow: hidden;
-}
-
-#loadingProgress {
-  width: 0%;
-  height: 100%;
-  background: #e9bd65;
-  transition: width .3s;
-}
-
-#loadingText {
-  color: #aeb7c6;
-  font-size: 11px;
-  margin-top: 13px;
-}
-
-#errorMessage {
-  position: fixed;
-  inset: 20px;
-  z-index: 200;
-  padding: 20px;
-  background: #1c1010;
-  color: #ffaaaa;
-  border: 1px solid #a44;
-  border-radius: 10px;
-  font-size: 13px;
-  overflow: auto;
-}
-
-@media (max-width: 360px) {
-  .control-btn {
-    width: 42px;
-    height: 42px;
+@media (max-width: 600px) {
+  .mobile-controls button {
+    width: 55px;
+    height: 55px;
   }
 
-  .action-btn {
-    width: 53px;
-    height: 53px;
+  .mobile-controls #accelerate {
+    width: 68px;
+    height: 68px;
   }
+
+  .race-brand {
+    font-size: 14px;
   }
-  
+}
