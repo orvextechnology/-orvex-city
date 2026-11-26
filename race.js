@@ -156,10 +156,25 @@ function createBike(color) {
   return bike;
 }
 
-// PLAYER BIKE
-const player = createBike(0x0066ff);
-player.position.set(0, 0, 8);
+// REAL PLAYER MOTORCYCLE
+const loader = new GLTFLoader();
+const player = new THREE.Group();
+
 scene.add(player);
+
+loader.load(
+  "./race-replica-superbike-fully-faired.glb",
+  (gltf) => {
+    const bikeModel = gltf.scene;
+    bikeModel.scale.set(1, 1, 1);
+    bikeModel.position.set(0, 0, 0);
+    player.add(bikeModel);
+  },
+  undefined,
+  (error) => console.error("Motorcycle loading error:", error)
+);
+
+player.position.set(0, 0, 8);
 
 // RACING OPPONENTS
 const opponents = [];
