@@ -31,71 +31,46 @@
     <p id="loadingText">Preparing your city...</p>
   </div>
 
-  <div id="game">
+  
+<div id="game">
 
-    <header class="top-bar">
-      <div class="brand">
-        <span class="brand-icon">O</span>
-        <div>
-          <strong>ORVEX CITY</strong>
-          <small>OPEN WORLD</small>
-        </div>
+  <div id="raceHUD">
+    <div class="race-brand">ORVEX MOTORSPORT</div>
+
+    <div class="race-stats">
+      <div class="stat">
+        <small>SPEED</small>
+        <strong><span id="speedValue">0</span> KM/H</strong>
       </div>
 
-      <div class="player-info">
-        <span>PLAYER</span>
-        <strong id="playerName">PLAYER 01</strong>
-      </div>
-    </header>
-
-    <div class="game-hud">
-      <div class="hud-card">
-        <small>LOCATION</small>
-        <strong id="locationName">ORVEX DISTRICT</strong>
-      </div>
-
-      <div class="hud-card money-card">
-        <small>BALANCE</small>
-        <strong id="playerMoney">₦ 5,000</strong>
+      <div class="stat">
+        <small>DISTANCE</small>
+        <strong id="distanceValue">0.00 km</strong>
       </div>
     </div>
-
-    <div id="missionBox">
-      <span class="mission-label">MISSION</span>
-      <strong>Explore the city</strong>
-      <p>Discover your new world.</p>
-    </div>
-
-    <div id="crosshair"></div>
-
-    <div class="mobile-controls">
-
-      <div class="movement-controls">
-        <button id="forward" class="control-btn up">▲</button>
-
-        <div class="movement-row">
-          <button id="left" class="control-btn">◀</button>
-          <button id="backward" class="control-btn">▼</button>
-          <button id="right" class="control-btn">▶</button>
-        </div>
-      </div>
-
-      <div class="action-controls">
-        <button id="jump" class="action-btn">JUMP</button>
-        <button id="run" class="action-btn">RUN</button>
-      </div>
-
-    </div>
-
-    <div class="bottom-message">
-      ORVEX TECHNOLOGIES
-    </div>
-
   </div>
+
+  <div class="mobile-controls">
+    <div class="steering">
+      <button id="left">◀</button>
+      <button id="right">▶</button>
+    </div>
+
+    <div class="racing-buttons">
+      <button id="brake">BRAKE</button>
+      <button id="nitro">NITRO</button>
+      <button id="accelerate">RACE</button>
+    </div>
+  </div>
+
+  <div class="race-footer">ORVEX TECHNOLOGIES</div>
+
+</div>
+  
 
   <div id="errorMessage" hidden></div>
 
-  <script type="module" src="game.js"></script>
+  <script type="module" src="race.js"></script>
 
 </body>
 </html>
